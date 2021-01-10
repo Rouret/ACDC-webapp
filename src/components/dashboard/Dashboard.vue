@@ -23,7 +23,7 @@ import { mapState } from 'vuex';
         </div>
       </div>
       <div class="ENC">
-        <div class="ENCTitle text-center">Script solidity disponible</div>
+        <div class="ENCTitle text-center">Scripts solidity disponibles</div>
         <div class="ENCContent">
           <div class="coin">
             <v-col class="text-center fill-height">
@@ -51,7 +51,7 @@ import { mapState } from 'vuex';
     </v-row>
     <v-row class="mt-10">
       <v-card width="100%" height="100%">
-        <v-card-title> Scripts disponible </v-card-title>
+        <v-card-title> Scripts disponibles </v-card-title>
         <v-list class="overflow">
           <v-list-item v-for="item in availableScripts" :key="item">
             <v-list-item-content>
