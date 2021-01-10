@@ -16,23 +16,37 @@ export default {
     startExec({ commit, state }, data) {
         commit("setIsProcess", true)
         http.post(process.env.VUE_APP_API + `/runScript/${state.currentScript}`, data).then((res) => {
-            commit("setRunExecData", res.map(ar => { return { "x": ar[0], "y": ar[1] } }))
+            commit("setRunExecData", res.map(el => el[1]))
+            commit("setRunExecDataInit", res.map(el => el[1]))
+            commit("setRunExecDataLabel", res.map(el => el[0]))
             commit("setIsConverted", false)
             commit("setIsProcess", false)
 
         })
     },
+    setCurrentParams({ commit }, data) {
+        commit("setCurrentParams", data)
+    },
+    setCurrentScript({ commit }, data) {
+        commit("setCurrentScript", data)
+    },
     setRunExecData({ commit }, data) {
         commit("setRunExecData", data)
+    },
+    setRunExecDataInit({ commit }, data) {
+        commit("setRunExecDataInit", data)
     },
     setIsProcess({ commit }, value) {
         commit("setIsProcess", value)
     },
-    setIsConverted({ commit }, value) {
-        commit("setIsConverted", value)
-    },
     setUnit({ commit }, value) {
         commit("setUnit", value)
+    },
+    resetRunExecData({ commit }) {
+        commit("resetRunExecData")
+    },
+    setErrorMessage({ commit }, message) {
+        commit("setErrorMessage", message)
     }
 
 }

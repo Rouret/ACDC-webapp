@@ -76,7 +76,7 @@ export default {
   }),
   computed: {
     ...mapState("modalStore", ["isOpen"]),
-    ...mapState("communStore", ["availableGenerators","currentScript"]),
+    ...mapState("communStore", ["availableGenerators"]),
   },
   methods: {
     ...mapActions("modalStore", ["closeModal"]),

@@ -2,7 +2,7 @@
   <div class="small">
     <line-chart></line-chart>
     <v-col>
-      <v-row>
+      <v-row class="mt-5">
         <v-btn color="blue-grey" class="ma-2 white--text" @click="downloadCSV">
           CSV
           <v-icon right dark> mdi-cloud-download </v-icon>
@@ -12,33 +12,31 @@
           <v-icon right dark> mdi-cloud-download </v-icon>
         </v-btn>
       </v-row>
-      <v-row>
-        <v-col cols="2">
+      <v-divider class="mt-5" ></v-divider>
+      <v-row class="mt-5 text-center">
+        <v-col class="center">
+          <p>Changer l'unité en</p>
+        </v-col>
+        <v-col class="center">
+          <v-select
+            v-model="unitLocal"
+            :items="availableUnit"
+            label="Unitée"
+          ></v-select>
+        </v-col>
+        <v-col class="center">
+          <p>avec un prix de gas de</p>
+        </v-col>
+        <v-col class="center">
           <v-text-field
-            label="Prix du gas"
             v-model="gasPrice"
             type="number"
             required
           ></v-text-field>
         </v-col>
-        <v-btn
-          color="blue-grey"
-          class="ma-2 white--text"
-          @click="convert('eth')"
-          :disabled="isConverted"
-        >
-          Convertir en eth
-          <v-icon right dark> mdi-cloud-download </v-icon>
-        </v-btn>
-        <v-btn
-          color="blue-grey"
-          class="ma-2 white--text"
-          @click="convert('eur')"
-          :disabled="isConverted"
-        >
-          Convertir en eur
-          <v-icon right dark> mdi-cloud-download </v-icon>
-        </v-btn>
+        <v-col class="center">
+          <v-btn class="ma-2" color="success" @click="newUnit"> Valider </v-btn>
+        </v-col>
       </v-row>
     </v-col>
   </div>
@@ -57,6 +55,7 @@ export default {
   data: function () {
     return {
       gasPrice: 20,
+      availableUnit: ["ETH", "EUR", "USD", "GasUsed"],
     };
   },
   computed: {
@@ -65,13 +64,21 @@ export default {
       "currentScript",
       "isConverted",
       "unit",
+      "runExecDataInit",
+      "runExecDataLabel",
     ]),
+    unitLocal: {
+      get() {
+        return this.unit;
+      },
+      set(value) {
+        this.setUnit(value);
+      },
+    },
   },
   methods: {
     ...mapActions("communStore", [
       "setRunExecData",
-      "setIsProcess",
-      "setIsConverted",
       "setUnit",
     ]),
     downloadCSV() {
@@ -86,13 +93,6 @@ export default {
         "application/json"
       );
     },
-    customRunExecData() {
-      return this.runExecData.map((el) => {
-        const obj = { index: el.x };
-        obj[this.unit] = el.y;
-        return { ...obj };
-      });
-    },
     fileName(ext) {
       const date = new Date();
       const now =
@@ -106,29 +106,61 @@ export default {
         date.getHours() +
         "_" +
         date.getMinutes();
-      return this.currentScript + "_rendu_" + now + "." + ext;
+
+      return `${this.currentScript}_rendu${this.unit}_${now}.${ext}`;
     },
-    async convert(targetUnit) {
-      if (this.isConverted) return;
-      this.setIsProcess(true);
-      this.setUnit(targetUnit);
-      await this.runExecData.map(async (el) => {
-        el.y *= this.gasPrice * 10 ** -9;
-        if (targetUnit === "eur") {
-          console.log("avant: " + el.y);
-          await eth.getEthereumPrice().then((res) => {
-            el.y *= res;
-          });
-          console.log("apres: " + el.y);
-        }
+    customRunExecData() {
+      var i = 0;
+      return this.runExecData.map((el) => {
+        let obj = { index: this.runExecDataLabel[i] };
+        obj[this.unit] = el;
+        i++;
+        return obj;
       });
-      console.log(this.runExecData);
-      this.setIsConverted(true);
-      this.setIsProcess(false);
+    },
+
+    async newUnit() {
+      let ethRunExecData = await this.runExecDataInit.map((el) => {
+        return el * this.gasPrice * 10 ** -9;
+      });
+      console.log(ethRunExecData);
+      switch (this.unit) {
+        case "ETH":
+          this.setRunExecData(ethRunExecData);
+          break;
+        case "EUR":
+          let ethEurValue;
+          await eth
+            .getEthereumPriceEur()
+            .then((ethPriceEur) => (ethEurValue = ethPriceEur));
+          let eurRunExecData = ethRunExecData.map((el) => {
+            return el * ethEurValue;
+          });
+          this.setRunExecData(eurRunExecData);
+          break;
+        case "USD":
+          let ethUsdValue;
+          await eth
+            .getEthereumPriceUsd()
+            .then((ethPriceUsd) => (ethUsdValue = ethPriceUsd));
+          let usdRunExecData = ethRunExecData.map((el) => {
+            return el * ethUsdValue;
+          });
+          this.setRunExecData(usdRunExecData);
+          break;
+        case "GasUsed":
+          this.setRunExecData(this.runExecDataInit);
+          break;
+      }
     },
   },
 };
 </script>
 
 <style>
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 </style>

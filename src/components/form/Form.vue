@@ -22,17 +22,23 @@
     <v-col cols="6">
       <v-card width="100%" height="100%">
         <v-card-title>
-          Paramétres {{ currentScript !== null ? `de ${currentScript}` : "" }}
+          Liste des paramétres {{ currentScript !== undefined ? `de ${currentScript}` : "" }}
         </v-card-title>
-        <v-list class="overflow-y-auto">
-          <v-list-item v-for="item in currentParams" :key="item">
-            <v-list-item-content>
-              <v-list-item-title>{{
-                item.match(/(\/\w+\;)/g)[0].replace(/[\/;]/g, "")
-              }}</v-list-item-title>
-            </v-list-item-content>
-          </v-list-item>
-        </v-list>
+        <div v-if="currentParams!== undefined && currentParams!== null && currentParams.length > 0">
+          <v-list class="overflow-y-auto">
+            <v-list-item v-for="item in currentParams" :key="item">
+              <v-list-item-content>
+                <v-list-item-title>{{
+                  item.match(/(\/\w+\;)/g)[0].replace(/[\/;]/g, "")
+                }}</v-list-item-title
+                >
+              </v-list-item-content>
+            </v-list-item>
+          </v-list>
+        </div>
+        <div v-else class="ml-4">
+          <p>Aucun script sélectionné</p>
+        </div>
       </v-card>
       <!--  -->
     </v-col>
@@ -64,8 +70,6 @@ export default {
       "availableScripts",
       "currentParams",
       "currentScript",
-      "availableGenerators",
-      "runExecData",
     ]),
     ...mapGetters("communStore", ["getScriptNameByIndex"]),
     selectedItem: {
@@ -73,13 +77,18 @@ export default {
         return this.currentScript;
       },
       set(value) {
+        if(value===undefined) {
+          this.setCurrentParams(null)
+          this.setCurrentScript(null)
+          return
+        }
         const scriptName = this.getScriptNameByIndex(value);
         this.fetchParamOfScript(scriptName);
       },
     },
   },
   methods: {
-    ...mapActions("communStore", ["fetchParamOfScript", "startExec"]),
+    ...mapActions("communStore", ["fetchParamOfScript","setCurrentParams","setCurrentScript"]),
     ...mapActions("modalStore", ["openModal"]),
     openModalVerif() {
       if (this.currentScript === null)

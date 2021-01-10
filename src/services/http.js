@@ -1,3 +1,5 @@
+import store from "@/store"
+
 const METHOD = { GET: "GET", POST: "POST", PUT: "PUT", DELETE: "DELETE" };
 
 export default {
@@ -25,7 +27,11 @@ export default {
             const res = await fetch(url, init);
             if (!res.ok) {
                 const json = await res.json();
+                store.dispatch("communStore/setErrorMessage", json.title + ", refresh please")
+                store.dispatch("communStore/setIsProcess", false)
+                store.dispatch("communStore/setIsConverted", false)
                 throw new Error(json.erreurs);
+
             }
             return res.json();
         } catch (err) {

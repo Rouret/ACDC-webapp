@@ -4,7 +4,9 @@ export default {
     currentScript: null,
     availableGenerators: ["list-bigInteger", "list-double", "list-string", "integer", "string", "double"],
     runExecData: null,
+    runExecDataInit: null,
+    runExecDataLabel: null,
     isProcess: false,
-    isConverted: false,
-    unit: "GasUsed"
+    unit: "GasUsed",
+    alertMessage: ""
 }

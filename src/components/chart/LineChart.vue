@@ -5,7 +5,12 @@ import { mapState } from "vuex";
 export default {
   extends: Line,
   computed: {
-    ...mapState("communStore", ["runExecData"]),
+    ...mapState("communStore", ["runExecData","runExecDataLabel","unit"]),
+  },
+  watch:{
+    runExecData(){
+      this.init();
+    }
   },
   mounted() {
     if(this.runExecData===null) return
@@ -15,10 +20,10 @@ export default {
     init() {
       this.renderChart(
         {
-          labels: this.runExecData.map((value) => value.x),
+          labels: this.runExecDataLabel,
           datasets: [
             {
-              label: "Prix en gas",
+              label: this.unit,
               backgroundColor: "#f87979",
               data: this.runExecData,
             },

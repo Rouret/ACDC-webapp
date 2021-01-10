@@ -15,7 +15,7 @@ import { mapState } from 'vuex';
               />
               <div class="text-center">
                 <span>
-                  {{ ethereumPrice }}
+                  {{ ethereumPrice + "€" }}
                 </span>
               </div>
             </v-col>
@@ -92,7 +92,7 @@ export default {
   },
   methods: {
     getEthereumPrice() {
-      eth.getEthereumPrice().then((res) => {
+      eth.getEthereumPriceEur().then((res) => {
         this.ethereumPrice = res;
       });
     },

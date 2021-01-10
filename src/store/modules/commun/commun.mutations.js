@@ -11,13 +11,19 @@ export default {
     setRunExecData(state, data) {
         state.runExecData = data;
     },
+    setRunExecDataInit(state, data) {
+        state.runExecDataInit = data;
+    },
+    setRunExecDataLabel(state, data) {
+        state.runExecDataLabel = data;
+    },
     setIsProcess(state, value) {
         state.isProcess = value
     },
-    setIsConverted(state, value) {
-        state.isConverted = value
-    },
     setUnit(state, value) {
         state.unit = value
-    }
+    },
+    setErrorMessage(state, message) {
+        state.alertMessage = message;
+    },
 }
