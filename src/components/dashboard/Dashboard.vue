@@ -79,6 +79,7 @@ import { mapState } from 'vuex';
 <script>
 import { mapState } from "vuex";
 import http from "@/services/http";
+import eth from "@/services/eth";
 export default {
   name: "Dashboard",
   data: function () {
@@ -91,13 +92,9 @@ export default {
   },
   methods: {
     getEthereumPrice() {
-      http
-        .get(
-          "https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=eur&include_24hr_change=true"
-        )
-        .then((res) => {
-          this.ethereumPrice = res?.ethereum?.eur + "€";
-        });
+      eth.getEthereumPrice().then((res) => {
+        this.ethereumPrice = res;
+      });
     },
   },
   mounted() {
@@ -106,7 +103,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 @import url("https://fonts.googleapis.com/css2?family=Goldman&display=swap");
 .coin {
   width: 230px;
@@ -129,5 +126,4 @@ export default {
   overflow-y: auto;
   height: 500px;
 }
-
 </style>

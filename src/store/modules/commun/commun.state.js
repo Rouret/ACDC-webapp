@@ -3,5 +3,8 @@ export default {
     currentParams: null,
     currentScript: null,
     availableGenerators: ["list-bigInteger", "list-double", "list-string", "integer", "string", "double"],
-    runExecData: null
+    runExecData: null,
+    isProcess: false,
+    isConverted: false,
+    unit: "GasUsed"
 }
