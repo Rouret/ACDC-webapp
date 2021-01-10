@@ -2,7 +2,7 @@
   <v-row>
     <v-col cols="4">
       <v-card width="100%" height="100%">
-        <v-card-title> Scripts disponible </v-card-title>
+        <v-card-title> Scripts disponibles </v-card-title>
         <v-list class="overflow-y-auto max" nav>
           <v-list-item-group v-model="selectedItem" color="primary">
             <v-list-item v-for="item in availableScripts" :key="item">
@@ -22,7 +22,7 @@
     <v-col cols="6">
       <v-card width="100%" height="100%">
         <v-card-title>
-          Liste des paramétres {{ currentScript !== undefined ? `de ${currentScript}` : "" }}
+          Liste des paramètres {{ currentScript !== undefined ? `de ${currentScript}` : "" }}
         </v-card-title>
         <div v-if="currentParams!== undefined && currentParams!== null && currentParams.length > 0">
           <v-list class="overflow-y-auto">
