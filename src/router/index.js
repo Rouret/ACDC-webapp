@@ -4,16 +4,17 @@ import Home from '../views/Home.vue'
 import Script from '../views/Script.vue'
 Vue.use(VueRouter)
 
-const routes = [{
-        path: '/',
-        name: 'Script',
-        component: Script
-    },
+const routes = [
     {
         path: '/',
         name: 'Home',
         component: Home
+    },{
+        path: '/',
+        name: 'Script',
+        component: Script
     },
+
 
 
 
